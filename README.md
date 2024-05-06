@@ -26,16 +26,16 @@ Paginacion con JQuery en pagina de administracion de articulos.
 
 <table>
     <tr> 
-        <td><img src="https://i.postimg.cc/HV0CWSGV/Home.png" width="100%" /></td>
-        <td><img src="https://i.postimg.cc/G8Z1tVhs/Admin-Articulos.png" width="100%" /><td> 
+        <td><img src="https://i.postimg.cc/rF3yJbQC/Home.png" width="100%" /></td>
+        <td><img src="https://i.postimg.cc/Wz4pWcBS/Admin-Articulos.png" width="100%" /><td> 
     </tr>
     <tr> 
-        <td><img src="https://i.postimg.cc/q6yH3wzD/Admin-Usuarios.png" width="100%" /></td> 
-        <td><img src="https://i.postimg.cc/7h7WbsGt/administracion.jpg" width="100%" /></td>
+        <td><img src="https://i.postimg.cc/Wz4pWcBS/Admin-Articulos.png" width="100%" /></td> 
+        <td><img src="https://i.postimg.cc/PJFX0FhH/Admin-Usuarios.png" width="100%" /></td>
     </tr>
     <tr> 
-        <td><img src="https://i.postimg.cc/dLcYKbxb/Login.png" width="100%" /></td> 
-        <td><img src="https://i.postimg.cc/23ZDMk2d/Registro.png" width="100%" /></td>
+        <td><img src="https://i.postimg.cc/m2t27RNg/Login.png" width="100%" /></td> 
+        <td><img src="https://i.postimg.cc/59P2Hjzr/Registro.png" width="100%" /></td>
     </tr>
     
 </table>
