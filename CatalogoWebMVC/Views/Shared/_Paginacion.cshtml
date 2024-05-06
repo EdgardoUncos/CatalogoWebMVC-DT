@@ -1,0 +1,57 @@
+﻿@model PaginacionRespuesta
+
+@{
+    // Concatenamos BaseUsel con el querystring
+    string plantillaLink = string.Concat(Model.BaseUrl, "?Pagina={0}&RegistrosPorPagina={1}");
+
+    // Si la pagina es mayor a 1 podemos activar el boton
+    // Acivar el boton siguiente si la pagina actual no es la ultima
+    var activarBotonAnterior = Model.Pagina > 1;
+    var activarBotonSiguiente = Model.Pagina < Model.CantidadTotalPaginas;
+
+}
+
+<nav>
+    <ul class="pagination">
+
+        @* Boton Anterior - activar o desactivar - agregarle el link correspondiente *@
+
+       <li class="page-item @(activarBotonAnterior ? null : "disabled")">
+           @if(activarBotonAnterior)
+            {
+                <a class="page-link" href="@string.Format(plantillaLink, Model.Pagina - 1 , Model.RegistrosPorPagina)">
+                        Anterior
+                </a>
+            }
+            else
+            {
+                <span class="page-link">Anterior</span>
+            }
+                
+       </li>
+       
+
+
+        @for(var pagina = 1; pagina <= Model.CantidadTotalPaginas; pagina++)
+        {
+            <li class="page-item @(pagina == Model.Pagina ? "active" : null)">
+                <a class="page-link" href="@string.Format(plantillaLink, pagina, Model.RegistrosPorPagina)">@pagina</a>
+            </li>
+        }
+
+        @* Boton Siguiente *@
+        <li class="page-item @(activarBotonSiguiente ? null : "disabled")">
+
+            @if(activarBotonSiguiente)
+            {
+                <a class="page-link" href="@string.Format(plantillaLink, Model.Pagina + 1, Model.RegistrosPorPagina)">Siguiente</a>
+            }
+            else
+            {
+                <span class="page-link">Siguiente</span>
+            }
+                
+        </li>
+    </ul>
+
+</nav>

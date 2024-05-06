@@ -1,0 +1,52 @@
+﻿@using CatalogoWebMVC.Data
+
+@section Styles {
+
+    <style>
+        /* Estilos personalizados para los elementos de paginación */
+        .pagination .page-link {
+            color: #fff; /* Cambia el color del texto de los enlaces de página */
+            background-color: #adb5bd; /* Cambia el color de fondo de los enlaces de página */
+            border-color: #adb5bd; /* Cambia el color del borde de los enlaces de página */
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #343a40; /* Cambia el color de fondo del enlace de página activo */
+            border-color: #343a40; /* Cambia el color del borde del enlace de página activo */
+        }
+
+        .pagination .page-link:hover {
+            color: #343a40;
+        }
+    </style>
+}
+
+@model PaginacionRespuesta<Articulo>
+
+    
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+               @foreach(var item in Model.Elementos)
+               {
+                        <div class="col">
+                            <div class="card text-center">
+                                <div style="height:60%;" class="p-3">
+                                    <img src="@item.ImagenUrl" class="card-img-top rounded-start" onerror="this.src='Images/placeholder.jpg'" style="max-width: 300px; max-height: 250px; margin: auto; object-fit: contain;" alt="..." />
+                                </div>
+
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Nombre</h5>
+                                    <p class="card-text">@item.Descripcion</p>
+                                    <a href="" class="btn btn-danger">🤍</a>
+                                    <a href="Articulo/Detalle?IdProducto=@item.Id" class="btn btn-light">Ver detalle</a>
+                                    <p class="lead">$ @item.Precio</p>
+                                </div>
+                            </div>
+                        </div>
+                }    
+            </div>
+       
+<partial name="_Paginacion" />
+                
+
+
+

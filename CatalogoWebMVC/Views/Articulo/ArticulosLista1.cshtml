@@ -1,0 +1,100 @@
+﻿@using CatalogoWebMVC.Data
+@model IEnumerable<Articulo>
+
+@{
+    ViewData["Title"] = "Listado Articulos";
+}
+
+<h1>Lista Articulos</h1>
+<br />
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="get" asp-action="FiltroRapido">
+                <div class="mb-3">
+                    @Html.TextBox("Buscar", null, new { placeholder = "Articulo a buscar", @class = "form-control"})
+                </div>
+
+            </form>
+        </div>
+        <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: start;">
+            <div class="mb-3">
+                <label class="form-label">Filtro Avanzado</label>
+                <input type="checkbox" id="chkAvanzado" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="seccionFiltro"></div>
+
+<div id="ListadoArticulos">
+    <partial name="_CuerpoListaArticulos" model="Model" />
+</div>
+
+
+<div class="mt-3">
+    <a asp-action="FormularioAlta" class="btn btn-primary">Agregar</a>
+</div>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            $("#Buscar").on("input", function () {
+                // Obtén el valor del cuadro de texto
+                var searchText = $(this).val();
+
+                // Verifica si la longitud del texto es mayor a 3 caracteres
+                if (searchText.length > 1) {
+                    // Realiza una solicitud AJAX al backend para obtener resultados
+                    $.ajax({
+                        url: '@Url.Action("Buscar","Articulo")', // Reemplaza 'Controlador' con tu controlador real
+                        type: 'GET',
+                        data: { Buscar: searchText },
+                        success: function (data) {
+                            //Manipula los datos recibidos, por ejemplo, actualiza una tabla con los resultados
+                            $("#ListadoArticulos").html(data);
+                        },
+                        error: function () {
+                            console.log("Error en la solicitud AJAX");
+                        }
+                    });
+                }
+            });
+
+            console.log("Documento cargado");
+
+            $("#chkAvanzado").change(function () {
+
+                var estado = this.checked;
+                if (estado)
+                    $("#Buscar").prop('disabled', true);
+                else
+                    $("#Buscar").prop('disabled', false);
+
+                console.log(estado);
+
+                $.ajax({
+                    url: '@Url.Action("FiltroAvanzado", "Articulo")', // Reemplaza 'Controlador' con tu controlador real
+                    type: 'POST',
+                    data: { Estado: estado },
+                    success: function (data) {
+                        //Manipula los datos recibidos, por ejemplo, actualiza una tabla con los resultados
+                        $("#seccionFiltro").html(data);
+                    },
+                    error: function () {
+                        console.log("Error en la solicitud AJAX");
+                    }
+                });
+            })
+
+
+
+        })
+    </script>
+}

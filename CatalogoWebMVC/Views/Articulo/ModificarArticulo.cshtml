@@ -1,0 +1,103 @@
+﻿@model ArticuloViewModel
+@{
+    ViewData["Title"] = "Modificar Articulo";
+}
+
+<h1>Modificar Articulo</h1>
+<hr />
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <form asp-action="ModificarArticulo">
+                <input asp-for="Id" type="hidden" />
+                <div class="form-group mb-3">
+                    <label asp-for="Codigo" class="form-label"></label>
+                    <input asp-for="Codigo" class="form-control" disabled="true" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Nombre" class="form-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Descripcion" class="form-label"></label>
+                    <input asp-for="Descripcion" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ImagenUrl" class="form-label"></label>
+                    <input asp-for="ImagenUrl" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="IdMarca" class="form-label"></label>
+                    <select asp-for="IdMarca" asp-items="Model.Marca" class="form-select"></select>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="IdCategoria" class="form-label"></label>
+                    <select asp-for="IdCategoria" asp-items="Model.Categoria" class="form-select"></select>
+                </div>
+
+
+                <div class="form-group mb-3">
+                    <label asp-for="Precio" class="form-label"></label>
+                    <input asp-for="Precio" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
+            <div class="mb-3">
+                <button id="btnEliminar" class="btn btn-danger">Eliminar</button>
+            </div>
+
+            <div id="confirmaEliminacion" style="display: none;">
+                <label class="form-label">Confirma Eliminacion</label>
+                <input type="checkbox" id="chkConfirmaEliminacion" />
+                <form asp-action="EliminarArticulo" asp-controller="Articulo">
+                    <button id="btnConfirmaEliminacion" type="submit" class="btn btn-outline-danger">Eliminar</button>
+                    <input asp-for="Id" type="hidden" />
+                </form>
+
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 gap-1">
+            <div class="mt-1">
+                <img class="img-fluid" style="height: 300px; object-fit:contain;" src="@Model.ImagenUrl" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            $("#btnEliminar").click(function () {
+                $("#confirmaEliminacion").show();
+            });
+
+            $("#btnConfirmaEliminacion").click(function () {
+
+                if ($("#chkConfirmaEliminacion").is(":checked")) {
+                    // $.post("@Url.Action("EliminarArticulo","Articulo")", function (data) {
+
+                    // });
+                }
+                else {
+
+                    console.log("no puedes eliminar");
+                }
+            });
+
+            $("#chkConfirmaEliminacion").change(function () {
+
+                if (!$(this).is(":checked"))
+                    $("#confirmaEliminacion").hide();
+            })
+
+           
+
+        })
+    </script>
+}

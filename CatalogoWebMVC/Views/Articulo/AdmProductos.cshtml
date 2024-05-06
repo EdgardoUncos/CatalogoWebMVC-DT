@@ -1,0 +1,208 @@
+﻿@using CatalogoWebMVC.Models
+@model IEnumerable<ArticuloViewModelDT>
+
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+@section Styles {
+    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    @*ESTILOS DE BOTONES*@
+    <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+
+    @*filter columns*@
+    <link href="https://cdn.datatables.net/fixedheader/3.2.2/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+
+    <style>
+
+        thead input {
+            width: 100%;
+            background-color: #FFFFCC !important
+        }
+
+        .btn-exportar-excel {
+            background-color: #198754 !important;
+            color: white !important;
+        }
+
+        .btn-exportar-pdf {
+            background-color: #dc3545 !important;
+            color: white !important;
+        }
+
+        .btn-exportar-print {
+            background-color: #00a7c9 !important;
+            color: white !important;
+        }
+
+        .btn-exportar-agregar {
+            background-color: #BEBEBE !important;
+            color: white !important;
+        }
+
+    </style>
+}
+
+<h1>Articulos</h1>
+
+<p>
+    <a asp-action="FormularioAlta" class="btn btn-exportar-agregar">Agregar nuevo articulo</a>
+</p>
+
+<table class="display" id="articuloTabla" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Codigo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Marca)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoria)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Precio)
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    @*SCRIPTS DE BOTONES*@
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+
+    @*excel*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+
+    @*pdf*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+
+    @*imprimir*@
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+
+
+    @*filter columns*@
+    <script src="https://cdn.datatables.net/fixedheader/3.2.2/js/dataTables.fixedHeader.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#articuloTabla').DataTable({
+
+                lengthMenu: [5, 10, 25, 50, 75, 100],
+                //------------------Primero -------------------------
+
+                "ajax": {
+                    "url": '@Url.Action("ListaArticulos", "Articulo")',
+                    "type": "GET",
+                    "datatype": "json"
+                },
+
+                "columns": [
+
+                    { "data": "codigo" },
+
+                    { "data": "nombre", "name": "Nombre" },
+                    { "data": "descripcion" },
+
+                    { "data": "marca" },
+                    { "data": "categoria" },
+
+
+                    { "data": "precio" },
+                    {
+                        "data": "id",
+                        "render": function (data, type, row, meta) {
+
+                            // return '<a href="/Articulos/Details/' + data + '">Detalle</a> | ' +
+                            //     '<a href="/Articulos/Edit/' + data + '">Editar</a> | ' +
+                            //     '<a href="/Articulos/Delete/' + data + '">Borrar</a>';
+
+                            return '<a class="btn btn-sm btn-primary" href="/Articulo/ModificarArticulo?IdProducto=' + data + '"><i class="fa-solid fa-pencil"></i></a> | ' +
+                                '<a class="btn btn-sm btn-danger" href="/Articulo/ModificarArticulo?IdProducto=' + data + '"><i class="fa-solid fa-trash-can"></i></a>';
+                        }
+                    }
+
+                ],
+
+                //---------------Segundo -----------------------------
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                },
+
+                columnDefs: [
+
+                    {
+                        targets: 5,
+                        visible: false,
+                    }
+
+                ],
+
+                // ----------Cuarto Botones-----------------------
+
+                dom: 'Bfrtip',
+                buttons: [
+                    //'excel',
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Exportar Excel',
+                        filename: 'Reporte Articulos',
+                        title: '',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        },
+                        className: 'btn-exportar-excel',
+                    },
+                    //'pdf',
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                        filename: 'Reporte Articulos',
+                        title: '',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        },
+                        className: 'btn-exportar-pdf',
+                    },
+                    //'print'
+                    {
+                        extend: 'print',
+                        title: '',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        },
+                        className: 'btn-exportar-print'
+
+                    },
+                    //extra
+                    'pageLength'
+                ]
+
+            });
+        });
+    </script>
+
+}

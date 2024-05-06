@@ -1,0 +1,101 @@
+﻿@model FiltroViewModel
+
+
+
+<div class="container">
+    <form id="AjaxForm">
+        <div class="row">
+            <div class="col-12 col-sm-3">
+                <div class="mb-3">
+                    <label class="control-label">Campo</label>
+                    <select id="IdCampo" asp-for="IdCampo" asp-items="Html.GetEnumSelectList<CatalogoWebMVC.Models.Campo>()" class="form-select"></select>
+                </div>
+            </div>
+            <div class="col-12 col-sm-3">
+                <div class="mb-3">
+                    <label class="control-label">Criterio</label>
+                    <select id="IdCriterio" asp-for="TextoCriterio" asp-items="Model.Criterio" class="form-select"></select>
+                </div>
+            </div>
+            <div class="col-12 col-sm-3">
+                <div class="mb-3">
+                    <label class="control-label" asp-for="Texto">Texto</label>
+                    <input id="Texto" asp-for="Texto" type="text" placeholder="texto de busqueda" class="form-control" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-3" style="display: flex; flex-direction: column; justify-content: flex-end;">
+                <div class="mb-3">
+                    <button id="btnAvanzado" type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+
+<script>
+
+    $(function () {
+
+        $("#IdCampo").change(function () {
+            const valorSeleccionado = $(this).val();
+            const urlCriterio = '@Url.Action("ObtenerCriterios")';
+
+            $.ajax({
+                url: urlCriterio,
+                type: 'POST',
+                data: valorSeleccionado,
+                contentType: 'application/json',
+                success: function (result) {
+                    // console.log(result);
+                    const criterio = result.map(criterio => `<option value=${criterio.value}>${criterio.text}</option>`);
+                    $("#IdCriterio").html(criterio);
+                },
+                error: function () {
+                    console.log("Error en la solicitud AJAX")
+                }
+            });
+
+            console.log(valorSeleccionado);
+        });
+
+        
+
+        $("#AjaxForm").submit(function (e) {
+                e.preventDefault();
+                console.log("Me dolio mucho tu click");
+
+                const IdCampo = $("#IdCampo").val();
+                const IdCriterio = $("#IdCriterio").val();
+                const Texto = $("#Texto").val();
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("BusquedaAvanzada", "Articulo")",
+                data: {
+                    IdCampo: $("#IdCampo").val(),
+                    IdCriterio: $("#IdCriterio").val(),
+                    Texto: $("#Texto").val(),
+                    TextoCriterio: $("#IdCriterio").children(":selected").text(),
+                    TextoCampo: $("#IdCampo").children(":selected").text()
+                },
+
+                success: function (result) {
+                    console.log(result);
+                    console.log("Resultado feliz");
+                },
+                error: function () {
+                    console.log("Error en la solicitud AJAX")
+                }
+            });
+                
+         });
+
+        })
+
+</script>
+
+
+

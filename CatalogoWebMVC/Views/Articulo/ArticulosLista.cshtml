@@ -1,0 +1,178 @@
+﻿@using CatalogoWebMVC.Data
+@model ArticulosListaViewModel
+
+@{
+    ViewData["Title"] = "Listado Articulos";
+}
+
+<h1>Lista Articulos</h1>
+<br />
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6">
+            <form method="get" asp-action="FiltroRapido">
+                <div class="mb-3">
+                    @Html.TextBox("Buscar", null, new { placeholder = "Articulo a buscar", @class = "form-control"})
+                </div>
+                
+            </form>
+        </div>
+        <div class="col-md-6" style="display: flex; flex-direction: column; justify-content: start;">
+            <div class="mb-3">
+                <label class="form-label">Filtro Avanzado</label>
+                <input type="checkbox" id="chkAvanzado" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<form id="AjaxForm">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-3">
+                <div class="mb-3">
+                    <label class="control-label">Campo</label>
+                    <select id="IdCampo" asp-for="FiltroModelo.IdCampo" asp-items="Html.GetEnumSelectList<CatalogoWebMVC.Models.Campo>()" class="form-select"></select>
+                </div>
+            </div>
+            <div class="col-12 col-sm-3">
+                <div class="mb-3">
+                    <label class="control-label">Criterio</label>
+                    <select id="IdCriterio" asp-for="FiltroModelo.IdCriterio" asp-items="@Model.FiltroModelo.Criterio" class="form-select"></select>
+                </div>
+            </div>
+            <div class="col-12 col-sm-3">
+                <div class="mb-3">
+                    <label class="control-label" asp-for="FiltroModelo.Texto">Texto</label>
+                    <input id="Texto" asp-for="FiltroModelo.Texto" type="text" placeholder="texto de busqueda" class="form-control" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-3" style="display: flex; flex-direction: column; justify-content: flex-end;">
+                <div class="mb-3">
+                    <button id="btnAvanzado" type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+ </form>
+
+<div id="ListadoArticulos" class="container">
+    <partial name="_CuerpoListaArticulos" model="Model.ListadoArticulos" />
+</div>
+
+
+<div class="mt-3">
+    <a asp-action="FormularioAlta" class="btn btn-primary">Agregar</a>
+</div>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            $("#Buscar").on("input", function () {
+                // Obtén el valor del cuadro de texto
+                var searchText = $(this).val();
+
+                // Verifica si la longitud del texto es mayor a 3 caracteres
+                if (searchText.length > 1) {
+                    // Realiza una solicitud AJAX al backend para obtener resultados
+                    $.ajax({
+                        url: '@Url.Action("Buscar","Articulo")', // Reemplaza 'Controlador' con tu controlador real
+                        type: 'GET',
+                        data: { Buscar: searchText },
+                        success: function (data) {
+                            //Manipula los datos recibidos, por ejemplo, actualiza una tabla con los resultados
+                            $("#ListadoArticulos").html(data);
+                        },
+                        error: function () {
+                            console.log("Error en la solicitud AJAX");
+                        }
+                    });
+                }
+            });
+
+            console.log("Documento cargado");
+            $("#AjaxForm").hide();
+
+            $("#chkAvanzado").change(function () {
+
+                var estado = this.checked;
+                if (estado) {
+                    $("#Buscar").prop('disabled', true);
+                    $("#AjaxForm").show();
+                }
+                else {
+                    $("#Buscar").prop('disabled', false);
+                    $("#AjaxForm").hide();
+                }
+
+                console.log(estado);
+
+
+            });
+
+            // Manejo del dropdown en cascada
+            const urlObtenerCriterio = '@Url.Action("ObtenerCriterios")';
+            $("#IdCampo").change(async function () {
+
+                console.log("El select cambio");
+                const valorSeleccionado = $(this).val();
+
+                const respuesta = await fetch(urlObtenerCriterio, {
+                    method: 'POST',
+                    body: valorSeleccionado,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const json = await respuesta.json();
+                console.log(json);
+
+                const criterio = json.map(criterio => `<option value=${criterio.value}>${criterio.text}</option>`);
+                $("#IdCriterio").html(criterio);
+            })
+
+            // Manejando el formulario
+            $("#AjaxForm").submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "@Url.Action("BusquedaAvanzada","Articulo")",
+                    data: {
+                        Texto: $("#Texto").val(),
+                        IdCriterio: $("#IdCriterio").val(),
+                        TextoCampo: $("#IdCampo").children(":selected").text(),
+                        TextoCriterio: $("#IdCriterio").children(":selected").text(),
+                        IdCampo: $("#IdCampo").val()
+                        
+
+                    },
+                    type: "post"
+                })
+
+                    .done(function (result) {
+                        if (result != null) {
+
+                            $("#ListadoArticulos").html(result);
+                        }
+                    })
+                    // Se ejecuta si se produjo un error.
+                    .fail(function (xhr, status, error) {
+                        // Mostramos un mensaje de error.
+                        console.log("Error");
+                    })
+                    // Hacer algo siempre, haya sido exitosa o no.
+                    .always(function () {
+
+                    });
+            })
+
+         })
+    </script>
+}
