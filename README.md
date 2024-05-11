@@ -24,21 +24,12 @@ Paginacion con JQuery en pagina de administracion de articulos.
 
 ### Algunas Imagenes
 
+<img src="https://i.postimg.cc/rF3yJbQC/Home.png" width="100%" />
+<img src="https://i.postimg.cc/Wz4pWcBS/Admin-Articulos.png" width="100%" />
+<img src="https://i.postimg.cc/PJFX0FhH/Admin-Usuarios.png" width="100%" />
 <table>
-    <tr> 
-        <td><img src="https://i.postimg.cc/rF3yJbQC/Home.png" width="100%" /></td>
-        
-    </tr>
-    <tr> 
-        <td><img src="https://i.postimg.cc/Wz4pWcBS/Admin-Articulos.png" width="100%" /></td> 
-        
-    </tr>
-    <tr>
-        <td><img src="https://i.postimg.cc/PJFX0FhH/Admin-Usuarios.png" width="100%" /></td>
-    </tr>
     <tr> 
         <td><img src="https://i.postimg.cc/m2t27RNg/Login.png" width="100%" /></td> 
         <td><img src="https://i.postimg.cc/59P2Hjzr/Registro.png" width="100%" /></td>
-    </tr>
-    
+    </tr>   
 </table>
